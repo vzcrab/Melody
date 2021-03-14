@@ -10,10 +10,10 @@
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "app.main:app",
+                "fastapp.main:app",
                 "--reload"
             ],
-            "jinja": true
+            "jinja": true,
         }
     ]
 }
