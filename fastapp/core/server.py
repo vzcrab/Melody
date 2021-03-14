@@ -14,6 +14,7 @@ from fastapp.routers.router_v1 import api_v1_router
 @Time    :   2021/03/14 14:23:03
 @Author  :   snc 
 """
+# TODO 服务器第一次运行初始化,建立目录...
 
 
 def create_app() -> FastAPI:
