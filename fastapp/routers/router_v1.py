@@ -2,6 +2,9 @@
 # -*- encoding: utf-8 -*-
 
 from fastapi import APIRouter
+
+from fastapp.api.v1 import file
+
 """
 版本路由区分与管理路由
 
@@ -11,3 +14,5 @@ from fastapi import APIRouter
 """
 
 api_v1_router = APIRouter()
+
+api_v1_router.include_router(file.router)
