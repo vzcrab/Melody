@@ -2,11 +2,13 @@
 # -*- encoding: utf-8 -*-
 
 import shutil
+import os
 
 from fastapi import APIRouter, File, UploadFile
 
 from fastapp.common.logger import logger
 from fastapp.core.config import settings
+from fastapp.api.schemas.response import response_code
 
 """
 文件操作路由
@@ -28,13 +30,17 @@ async def create_upload_file(file: UploadFile = File(...)):
 
     logger.info(f"用户->上传文件:{file.filename}")
 
-    file_path = './data/uploadfiles/'+file.filename
+    uploadfile_path = os.path.join(settings.BASE_PATH, 'data', 'uploadfile')
+    if not os.path.exists(uploadfile_path):
+        os.makedirs(uploadfile_path)
+
+    file_path = os.path.join(uploadfile_path, file.filename)
 
     try:
         with open(file_path, 'wb') as f:
             c_path = shutil.copyfileobj(file.file, f)
     except Exception as e:
         logger.error(e)
-        return {'message': 'failed'}
+        return response_code.resp_500()
 
-    return {'status': 200, 'message': 'success'}
+    return response_code.resp_200()
