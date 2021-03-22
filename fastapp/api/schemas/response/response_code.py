@@ -20,7 +20,20 @@ def resp_200(*, data: Union[list, dict, str] = None, message: str = "Success") -
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content=jsonable_encoder({
-            'code': 200,
+            'code': 2000,
+            'message': message,
+            'data': data,
+        })
+    )
+
+
+def resp_415(*, data: Union[list, dict, str] = None, message: str = "媒体类型不支持") -> Response:
+    """媒体类型不支持
+    """
+    return JSONResponse(
+        status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        content=jsonable_encoder({
+            'code': 2000,
             'message': message,
             'data': data,
         })
