@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-
 from fastapi import FastAPI, Request, Response
 
 from fastapp.core.config import settings
@@ -14,7 +13,6 @@ from fastapp.routers.router_v1 import api_v1_router
 @Time    :   2021/03/14 14:23:03
 @Author  :   snc 
 """
-# TODO 服务器第一次运行初始化,建立目录...
 
 
 def create_app() -> FastAPI:
