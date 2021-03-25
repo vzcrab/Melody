@@ -11,9 +11,11 @@
             "module": "uvicorn",
             "args": [
                 "fastapp.main:app",
-                "--reload"
+                "--reload",
+                "--reload-dir",
+                "./fastapp"
             ],
-            "jinja": true,
+            "jinja": true
         }
     ]
 }
