@@ -149,3 +149,5 @@ cython_debug/
 
 # custom
 data/*
+.idea
+plugins/app_parser/app_parser
