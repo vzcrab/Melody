@@ -20,7 +20,7 @@ MASAP系统中位于功能层.
 python setup.py install
 ```
 
-具体用法参见 apk_parse3/README
+具体用法参见 [apk_parse3/README](https://github.com/itomsu/apk_parse3)
 
 选取字段信息
 
@@ -41,6 +41,6 @@ python setup.py install
 | receivers      | 获取所有receivers   | apkf.get_receivers()              | list             |
 | providers      | 获取所有providers   | apkf.get_providers()              | list             |
 | permissions    | 获取所有permissions | apkf.get_permissions()            | list             |
-| icon           | 应用图标            | apkf.parse_icon(icon_path='/tmp') | 存如指定目录     |
+| icon           | 应用图标            | apkf.parse_icon(icon_path='/tmp') | 存入指定目录     |
 | cert_text      | 获取证书内容        | apkf.cert_text                    |                  |
 >>>>>>> 5e844fa... build: 添加apk_parse3及文档
