@@ -23,15 +23,15 @@ class AppInfoModel(BaseModel):
     """
     package: str
     file_md5: str
-    cert_md5: str
-    file_size: int
+    cert_md5: list
+    file_size: str
     androidversion: dict
-    sdk_version: int
+    sdk_version: str
     libraries: list
     files: list
     files_types: dict
     main_activity: str
-    avtivities: list
+    activities: list
     services: list
     receivers: list
     providers: list

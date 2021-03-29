@@ -16,7 +16,7 @@ from fastapp.models.app_info import AppInfo
 router = APIRouter(prefix='/parser')
 
 
-@router.get('/info', summary='应用信息', response_model=schemas.AppInfoModel)
+@router.get('/apkinfo', summary='应用信息', response_model=schemas.AppInfoModel)
 def get_apk_info(file):
     # TODO file类型与如何传参
 
