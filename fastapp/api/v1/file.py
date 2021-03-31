@@ -29,7 +29,7 @@ async def create_upload_file(file: UploadFile = File(...)):
     logger.info(f"用户->上传文件:{file.filename}")
 
     file_ext = os.path.splitext(file.filename)[-1]
-    if file_ext != 'apk' or file_ext != 'ipa':
+    if file_ext not in ['.apk', '.ipa']:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail='不支持该媒体类型')
 
