@@ -3,7 +3,7 @@
 
 from fastapi import APIRouter
 
-from fastapp.api.v1 import file
+from fastapp.api.v1 import file, parser
 
 """
 版本路由区分与管理路由
@@ -16,3 +16,4 @@ from fastapp.api.v1 import file
 api_v1_router = APIRouter()
 
 api_v1_router.include_router(file.router)
+api_v1_router.include_router(parser.router)
