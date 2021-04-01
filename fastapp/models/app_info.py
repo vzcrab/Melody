@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from fastapi import HTTPException, status
+
 from apk_parse3.apk import APK
 
 from fastapp.api.schemas import AppInfoModel
@@ -21,7 +23,9 @@ class AppInfo(object):
     def apk_parser(self) -> AppInfoModel:
         # TODO 类型声明
         apkf = APK(self.file)
-        apkf.is_valid_APK()
+        if not apkf.is_valid_APK():
+            raise HTTPException(
+                status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail='不支持该媒体类型')
         # TODO 判断是否是apk文件
         app_info = AppInfoModel()
         app_info.package = apkf.package
