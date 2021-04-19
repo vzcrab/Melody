@@ -151,3 +151,4 @@ cython_debug/
 data/*
 .idea
 plugins/app_parser/app_parser
+.vscode/settings.json
