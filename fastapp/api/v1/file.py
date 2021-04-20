@@ -9,6 +9,7 @@ from fastapi import APIRouter, File, UploadFile, HTTPException, status
 from fastapp.common.logger import logger
 from fastapp.core.config import settings
 from fastapp.api import schemas
+from fastapp.models.app_info import AppInfo
 
 """
 文件操作路由
@@ -21,7 +22,7 @@ from fastapp.api import schemas
 router = APIRouter()
 
 
-@router.post('/uploadfile', summary='上传文件', response_model=schemas.Msg, responses={415: {}})
+@router.post('/uploadfile', summary='上传文件', response_model=schemas.AppInfoModel, responses={415: {}})
 async def create_upload_file(file: UploadFile = File(...)):
     # TODO 前端做hash, 将值上传, 判断
     # TODO 权限, 用户上传
@@ -29,7 +30,7 @@ async def create_upload_file(file: UploadFile = File(...)):
     logger.info(f"用户->上传文件:{file.filename}")
 
     file_ext = os.path.splitext(file.filename)[-1]
-    if file_ext != 'apk' or file_ext != 'ipa':
+    if file_ext not in ['.apk', '.ipa']:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail='不支持该媒体类型')
 
@@ -42,4 +43,6 @@ async def create_upload_file(file: UploadFile = File(...)):
     with open(file_path, 'wb') as f:
         c_path = shutil.copyfileobj(file.file, f)
 
-    return {"msg": "文件已上传"}
+    app_info = AppInfo(file_path).apk_parser()
+
+    return app_info
