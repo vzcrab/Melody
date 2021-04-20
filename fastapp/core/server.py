@@ -2,6 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 from fastapi import FastAPI, Request, Response
+from starlette.middleware.sessions import SessionMiddleware
 
 from fastapp.core.config import settings
 from fastapp.routers.router_v1 import api_v1_router
@@ -45,6 +46,10 @@ def create_app() -> FastAPI:
 
     # 取消挂载在 request对象上面的操作，感觉特别麻烦，直接使用全局的
     # register_init(app)
+
+    # 中间件, https://www.starlette.io/middleware/#sessionmiddleware
+    app.add_middleware(SessionMiddleware,
+                       secret_key=settings.SECRET_KEY)
 
     """ 
     if settings.DEBUG:
