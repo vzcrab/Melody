@@ -1,0 +1,4 @@
+[submodule "plugins/apk_parse3"]
+	path = plugins/apk_parse3
+	url = https://github.com/Phat3/apk_parse3.git
+	branch = feat/pypi_setup
