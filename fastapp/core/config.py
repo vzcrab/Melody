@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+import os
 import secrets
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
+from pydantic import (AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn,
+                      validator)
 
 """
 # 描述
@@ -16,8 +18,8 @@ from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, v
 
 
 class AuthGithub(object):
-    CLIENT_ID: str
-    CLIENT_SECRET: str
+    CLIENT_ID: str = ''  # FIXME 设置密钥
+    CLIENT_SECRET: str = ''
 
 
 class Settings(BaseSettings):
@@ -39,11 +41,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
 
     # 项目根路径
-    BASE_PATH: str = os.path.dirname(os.path.dirname(os.path.dirname(
-        os.path.dirname((os.path.abspath(__file__))))))
+    BASE_PATH: str = os.getcwd()
 
     # Oauth2 github
-    OAUTH2_GITHUB: AuthGithub
+    OAUTH2_GITHUB: AuthGithub = AuthGithub()
 
     SECRET_KEY: str = secrets.token_urlsafe(32)
 
@@ -51,7 +52,6 @@ class Settings(BaseSettings):
         case_sensitive = True
         env_file = '.env'
         env_file_encoding = 'utf-8'
-        env_prefix = 'MASAP_'
 
 
 settings = Settings()

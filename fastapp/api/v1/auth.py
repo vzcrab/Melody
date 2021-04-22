@@ -5,6 +5,7 @@ from authlib.integrations.starlette_client import OAuth
 from fastapi import APIRouter, Request
 
 from fastapp.core.config import settings
+from fastapp.core import security
 
 """
 # 描述
@@ -20,7 +21,7 @@ oauth = OAuth()
 
 oauth.register(
     name='github',
-    client_id=settings.OAUTH2_GITHUB.CLIENT_IDs,
+    client_id=settings.OAUTH2_GITHUB.CLIENT_ID,
     client_secret=settings.OAUTH2_GITHUB.CLIENT_SECRET,
     access_token_url='https://github.com/login/oauth/access_token',
     access_token_params=None,
@@ -42,5 +43,7 @@ async def auth_via_github(request: Request):
     token = await oauth.github.authorize_access_token(request)
     resp = await oauth.github.get('user', token=token)
     user = resp.json()
-    email = await oauth.github.get('user/emails', token=token)
-    return user
+    access_token = security.create_access_token(
+        user['login'])  # TODO 多用户, 数据库, 主键, 生成token
+    # email = await oauth.github.get('user/emails', token=token)
+    return access_token
