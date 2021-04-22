@@ -40,6 +40,7 @@ async def create_upload_file(file: UploadFile = File(...), user: schemas.User = 
     if not os.path.exists(uploadfile_path):
         os.makedirs(uploadfile_path)
 
+    # FIXME 防止任意代码执行, 文件名需使用临时保存名
     file_path = os.path.join(uploadfile_path, file.filename)
 
     with open(file_path, 'wb') as f:
