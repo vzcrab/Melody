@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+import json
+import os
+
 from fastapi import HTTPException, status
 
 from fastapp.api.schemas.appinfo import ApkInfo, IpaInfo
+from fastapp.core.config import settings
 
 from apk_parse3.apk import APK
 from plugins.ipa_parser import IosIpa as IpaParser
@@ -57,3 +61,15 @@ class AppInfo(object):
         app_info = IpaInfo(**app_info)
 
         return app_info
+
+    def apk_parser_go(self):
+        parser_path = os.path.join(
+            settings.BASE_PATH, 'plugins', 'app_parser.exe')
+
+        run = os.popen(parser_path+' '+self.file)
+        info = run.buffer.read().decode(encoding='utf8')
+        run.close()
+
+        info = json.loads(info)
+
+        return info
