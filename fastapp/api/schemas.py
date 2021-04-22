@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from typing import Optional
+
 from pydantic import BaseModel
 
 """
@@ -43,3 +45,13 @@ class AppInfoModel(BaseModel):
     # TODO 前端显示名, title字段提示, 列表...
 
  # 继承一个模型, 然后指定显示字段与数据类型
+
+
+class User(BaseModel):
+    username: str
+    email: Optional[str] = None
+    disabled: Optional[bool] = None
+
+
+class TokenPayload(BaseModel):
+    username: str
