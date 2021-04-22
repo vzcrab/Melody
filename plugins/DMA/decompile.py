@@ -35,10 +35,3 @@ def decompile(path, out_path):
         else:
             err = res.split("\n")
             return err
-
-
-if __name__ == '__main__':
-    out_path = r"/Users/ios/Downloads/out"
-    file_path = r"/Users/ios/Downloads/ReflectMaster-3.5.3.apk1"
-    result = decompile(file_path, out_path)
-    print(result)
