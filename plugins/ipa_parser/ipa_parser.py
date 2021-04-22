@@ -7,24 +7,6 @@ import zipfile  # zipping
 import re
 import json
 
-def print_info(ipa):
-    build_infos = ipa.buildInfo
-
-    ipa_name = ipa.name
-    bundle_id = build_infos.bundleId
-    version_num = build_infos.versionNumber
-    build_num = build_infos.buildNumber
-    icon_path = ipa.iconsArray[0]
-
-    info = {
-        "ipa_name" : ipa_name,
-        "bundle_id": bundle_id.strip(),
-        "version_num": version_num.strip(),
-        "build_num": build_num.strip(),
-        "icon_path": icon_path
-    }
-    json_info = json.dumps(info)
-    print(json_info)
 
 # --------------------
 # Core iOS IPA classes
@@ -94,17 +76,20 @@ class IosIpa:
             plist_content = plist.readlines()
 
         # Find the required info
-        index = 0;
+        index = 0
         for plist_line in plist_content:
 
             if "CFBundleIdentifier" in plist_line:
-                bundleIdString = get_content_from_string_xml(plist_content[index + 1])
+                bundleIdString = get_content_from_string_xml(
+                    plist_content[index + 1])
 
             if "CFBundleShortVersionString" in plist_line:
-                versionNumber = get_content_from_string_xml(plist_content[index + 1])
+                versionNumber = get_content_from_string_xml(
+                    plist_content[index + 1])
 
             if "CFBundleVersion" in plist_line:
-                buildNumber = get_content_from_string_xml(plist_content[index + 1])
+                buildNumber = get_content_from_string_xml(
+                    plist_content[index + 1])
 
             if "CFBundleIconFiles" in plist_line:
                 appIcon = get_content_from_string_xml(plist_content[index + 2])
@@ -125,11 +110,36 @@ class IosIpa:
             if app_file.endswith('.app'):
                 for app_subfile in os.listdir(payload_dir + '/' + app_file):
                     res = pattern.search(app_subfile)
-                    if res :
+                    if res:
                         icon_filepath = payload_dir + '/' + app_file + '/' + res.group()
                         icon_filepath_array.append(icon_filepath)
 
         return icon_filepath_array
+
+    def get_info(self):
+        """获取解析基本信息
+
+        Returns:
+            dict: 应用信息. 详见 https://github.com/nKsnC/Melody/tree/dev/plugins/ipa_parser
+        """
+
+        build_infos = self.buildInfo
+
+        ipa_name = self.name
+        bundle_id = build_infos.bundleId
+        version_num = build_infos.versionNumber
+        build_num = build_infos.buildNumber
+        icon_path = self.iconsArray[0]
+
+        info = {
+            "ipa_name": ipa_name,
+            "bundle_id": bundle_id.strip(),
+            "version_num": version_num.strip(),
+            "build_num": build_num.strip(),
+            "icon_path": icon_path
+        }
+
+        return info
 
 
 # --------------------

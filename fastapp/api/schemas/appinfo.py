@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from typing import Union
+
 from pydantic import BaseModel
 
 """
@@ -12,29 +14,33 @@ from pydantic import BaseModel
 """
 
 
-class AppInfoModel(BaseModel):
-    """ 
-    应用信息模型
-    """
-    package: str = ''
-    file_md5: str = ''
-    cert_md5: list = []
-    file_size: str = ''
-    androidversion: dict = {}
-    sdk_version: str = ''
-    libraries: list = []
-    files: list = []
-    files_types: dict = {}
+class AppInfoBase(BaseModel):
+    type: str  # 限定 apk 与 ipa
 
-    main_activity: str = ''
 
-    activities: list = []
-    services: list = []
-    receivers: list = []
-    providers: list = []
-    permissions: list = []
-    # icon: # 图片
-    # cert_text
-    # TODO 前端显示名, title字段提示, 列表...
+class ApkInfo(AppInfoBase):
+    type = 'apk'
+    package: str
+    file_md5: str
+    cert_md5: list
+    file_size: str
+    androidversion: dict
+    sdk_version: str
+    libraries: list
+    files: list
+    files_types: dict
 
- # 继承一个模型, 然后指定显示字段与数据类型
+    main_activity: str
+    activities: list
+    services: list
+    receivers: list
+    providers: list
+    permissions: list
+
+
+class IpaInfo(AppInfoBase):
+    type = 'ipa'
+    ipa_name: str
+    bundle_id: str
+    version_num: str
+    build_num: str
