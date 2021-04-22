@@ -1,22 +1,15 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from typing import Optional
-
 from pydantic import BaseModel
 
 """
-响应模型
+应用信息模型
 
-@File    :   schemas.py
-@Time    :   2021/03/29 10:30:48
+@File    :   appinfo.py
+@Time    :   2021/04/22 11:08:32
 @Author  :   snc 
 """
-
-
-class Msg(BaseModel):
-    code: int = 2000
-    msg: str
 
 
 class AppInfoModel(BaseModel):
@@ -45,13 +38,3 @@ class AppInfoModel(BaseModel):
     # TODO 前端显示名, title字段提示, 列表...
 
  # 继承一个模型, 然后指定显示字段与数据类型
-
-
-class User(BaseModel):
-    username: str
-    email: Optional[str] = None
-    disabled: Optional[bool] = None
-
-
-class TokenPayload(BaseModel):
-    username: str
