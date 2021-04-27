@@ -34,7 +34,7 @@ oauth.register(
 
 @router.get("/login/github")
 async def login_via_github(request: Request):
-    redirect_uri = request.url_for('auth_via_github')
+    redirect_uri = 'http://localhost:8080/login'
     return await oauth.github.authorize_redirect(request, redirect_uri)
 
 
