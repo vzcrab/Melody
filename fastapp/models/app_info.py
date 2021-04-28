@@ -26,7 +26,7 @@ class AppInfo(object):
         self.file = file
 
     def apk_parser(self) -> ApkInfo:
-        # TODO 类型声明
+
         apkf = APK(self.file)
         if not apkf.is_valid_APK():
             raise HTTPException(

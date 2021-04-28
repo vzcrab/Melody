@@ -39,5 +39,5 @@ def create_access_token(
     header = {'alg': settings.ALGORITHM}
     payload = {"exp": expire, "sub": str(subject)}
     encoded_jwt = jwt.encode(header,
-                             payload, settings.SECRET_KEY)  # FIXME 使用同一个密钥是否可行
+                             payload, settings.SECRET_KEY)
     return encoded_jwt
