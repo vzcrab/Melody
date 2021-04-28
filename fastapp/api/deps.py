@@ -7,6 +7,7 @@ from fastapi.security.oauth2 import OAuth2AuthorizationCodeBearer
 
 from fastapp.core.config import settings
 from fastapp.api import schemas
+from fastapp.common.logger import logger
 
 """
 FastAPI 依赖
@@ -28,7 +29,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             token, settings.SECRET_KEY
         )
         claims.validate()
-    except (errors.InvalidClaimError):
+    except (errors.InvalidClaimError, errors.DecodeError, errors.BadSignatureError) as e:
+        logger.error(repr(e))
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials",

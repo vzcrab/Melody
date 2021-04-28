@@ -40,6 +40,7 @@ async def login_via_github(request: Request):
 
 @router.get("/auth/github")
 async def auth_via_github(request: Request):
+    # TODO httpx.ConnectTimeout 连接github超时
     token = await oauth.github.authorize_access_token(request)
     resp = await oauth.github.get('user', token=token)
     user = resp.json()
