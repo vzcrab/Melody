@@ -9,7 +9,7 @@ from fastapp.core.config import settings
 from fastapp.routers.router_v1 import api_v1_router
 
 """
-服务器
+应用工厂
 
 @File    :   server.py
 @Time    :   2021/03/14 14:23:03

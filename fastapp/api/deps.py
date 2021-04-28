@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from authlib.jose import jwt, errors
+from authlib.jose import JsonWebToken, errors
 from fastapi import Depends, status, HTTPException
 from fastapi.security.oauth2 import OAuth2AuthorizationCodeBearer
 
@@ -16,6 +16,7 @@ FastAPI 依赖
 @Author  :   snc 
 """
 
+jwt = JsonWebToken([settings.ALGORITHM])
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl="/login/github", tokenUrl="/auth/github")  # 应该不是最佳的方案
@@ -24,7 +25,7 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         claims = jwt.decode(
-            token, settings.SECRET_KEY  # FIXME 固定使用一个算法
+            token, settings.SECRET_KEY
         )
         claims.validate()
     except (errors.InvalidClaimError):
@@ -32,7 +33,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials",
         )
-    user = claims.sub  # TODO 数据模型
+    user = claims.sub  # TODO token payload 数据模型=>user 数据模型
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user

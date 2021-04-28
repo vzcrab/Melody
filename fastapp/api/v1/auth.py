@@ -44,6 +44,6 @@ async def auth_via_github(request: Request):
     resp = await oauth.github.get('user', token=token)
     user = resp.json()
     access_token = security.create_access_token(
-        user['login'])  # TODO 多用户, 数据库, 主键, 生成token
+        user['login'])  # TODO 适配数据库。多用户, 数据库, 主键, 生成token
     # email = await oauth.github.get('user/emails', token=token)
     return access_token
