@@ -59,8 +59,7 @@ type App struct {
 	Icon       string
 }
 
-func Parser(path string) {
-
+func Parser(path string, iconPath string) {
 	files := path
 	apk, _ := ipapk.NewAppParser(files)
 	appParser := &App{}
@@ -74,8 +73,13 @@ func Parser(path string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		_ = SaveImage(dir+"/"+apk.BundleId+"/icon.png", apk.Icon)
-		appParser.Icon = apk.BundleId + "/icon.png"
+		if len(iconPath) < 1 {
+			iconPath = dir + "/" + apk.BundleId + "/icon.png"
+		} else {
+			iconPath = iconPath + "/icon.png"
+		}
+		_ = SaveImage(iconPath, apk.Icon)
+		appParser.Icon = iconPath
 	} else {
 		appParser.Icon = "None"
 	}
@@ -86,9 +90,13 @@ func main() {
 	argNum := len(os.Args[1:])
 	if argNum < 1 {
 		println("args no enough!")
-	} else {
+	} else if argNum == 1 {
 		var path = os.Args[1]
-		Parser(path)
+		Parser(path, "")
+	} else if argNum == 2 {
+		var appPath = os.Args[1]
+		var iconPath = os.Args[2]
+		Parser(appPath, iconPath)
 	}
 
 }
