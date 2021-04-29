@@ -74,7 +74,7 @@ func Parser(path string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		SaveImage(dir+"/"+apk.BundleId+"/icon.png", apk.Icon)
+		_ = SaveImage(dir+"/"+apk.BundleId+"/icon.png", apk.Icon)
 		appParser.Icon = apk.BundleId + "/icon.png"
 	} else {
 		appParser.Icon = "None"
