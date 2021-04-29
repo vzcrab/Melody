@@ -39,3 +39,4 @@ python setup.py install
 | icon           | 应用图标            | apkf.parse_icon(icon_path='/tmp') | 存入指定目录     |
 | cert_text      | 获取证书内容        | apkf.cert_text                    |                  |
 
+## [ipa_parser](https://github.com/nKsnC/Melody/tree/dev/plugins/ipa_parser)

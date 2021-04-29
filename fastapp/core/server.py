@@ -2,12 +2,14 @@
 # -*- encoding: utf-8 -*-
 
 from fastapi import FastAPI, Request, Response
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from fastapp.core.config import settings
 from fastapp.routers.router_v1 import api_v1_router
 
 """
-服务器
+应用工厂
 
 @File    :   server.py
 @Time    :   2021/03/14 14:23:03
@@ -32,7 +34,7 @@ def create_app() -> FastAPI:
     # 其余的一些全局配置可以写在这里 多了可以考虑拆分到其他文件夹
 
     # 跨域设置
-    # register_cors(app)
+    register_cors(app)
 
     # 注册路由
     register_router(app)
@@ -45,6 +47,10 @@ def create_app() -> FastAPI:
 
     # 取消挂载在 request对象上面的操作，感觉特别麻烦，直接使用全局的
     # register_init(app)
+
+    # 中间件, https://www.starlette.io/middleware/#sessionmiddleware
+    app.add_middleware(SessionMiddleware,
+                       secret_key=settings.SECRET_KEY)
 
     """ 
     if settings.DEBUG:
@@ -62,3 +68,18 @@ def register_router(app: FastAPI) -> None:
         app (FastAPI): FastAPI
     """
     app.include_router(api_v1_router)
+
+
+def register_cors(app: FastAPI) -> None:
+    origins = [
+        "http://localhost",
+        "http://localhost:8080",
+    ]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
