@@ -3,7 +3,9 @@
 
 from typing import List
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Cookie
+
+from fastapp.api import schemas, deps
 
 """
 # 描述
@@ -26,7 +28,7 @@ class ConnectionManager(object):
 
     async def connect(self, ws: WebSocket):
         # 等待连接
-        await ws.accept()
+        await ws.accept(subprotocol='access_token')
         # 存储ws连接对象
         self.active_connections.append(ws)
 
@@ -42,15 +44,20 @@ class ConnectionManager(object):
 manager = ConnectionManager()
 
 
-@router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+def ws_get_user(ws: WebSocket):
+    access_token = ws.headers['Sec-WebSocket-Protocol'].split(',')[-1].strip()
+    user = deps.get_current_user(access_token)
+    return user
 
+
+@router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, user: schemas.User = Depends(ws_get_user)):
     await manager.connect(websocket)
 
     try:
         while True:
             data = await websocket.receive_text()
-            await manager.send_personal_message(f"你说了: {data}", websocket)
-
+            # FIXME 格式化字符漏洞
+            await manager.send_personal_message(f"{user} 说了: {data}", websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
