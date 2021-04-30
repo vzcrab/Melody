@@ -8,12 +8,14 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
 )
+
 // 判断文件夹是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -49,15 +51,15 @@ func SaveImage(p string, src image.Image) error {
 }
 
 type App struct {
-	Name      string
-	BundleID  string
-	Version   string
+	Name       string
+	BundleID   string
+	Version    string
 	SdkVersion string
-	Size    string
-	Icon    string
+	Size       string
+	Icon       string
 }
 
-func Parser(path string)  {
+func Parser(path string, iconPath string) {
 	files := path
 	apk, _ := ipapk.NewAppParser(files)
 	appParser := &App{}
@@ -66,22 +68,35 @@ func Parser(path string)  {
 	appParser.Version = apk.Version
 	appParser.SdkVersion = apk.Build
 	appParser.Size = strconv.FormatInt(apk.Size, 10)
-	if apk.Icon != nil{
-		SaveImage(apk.BundleId+"/icon.png",apk.Icon)
-		appParser.Icon = apk.BundleId+"/icon.png"
-	}else{
+	if apk.Icon != nil {
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+		if len(iconPath) < 1 {
+			iconPath = dir + "/" + apk.BundleId + "/icon.png"
+		} else {
+			iconPath = iconPath + "/icon.png"
+		}
+		_ = SaveImage(iconPath, apk.Icon)
+		appParser.Icon = iconPath
+	} else {
 		appParser.Icon = "None"
 	}
 	data, _ := json.Marshal(appParser)
 	fmt.Println(string(data))
 }
-func main () {
+func main() {
 	argNum := len(os.Args[1:])
 	if argNum < 1 {
 		println("args no enough!")
-	}else {
+	} else if argNum == 1 {
 		var path = os.Args[1]
-		Parser(path)
+		Parser(path, "")
+	} else if argNum == 2 {
+		var appPath = os.Args[1]
+		var iconPath = os.Args[2]
+		Parser(appPath, iconPath)
 	}
 
 }
