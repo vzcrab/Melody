@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from typing import Generator
+
 from authlib.jose import JsonWebToken, errors
-from fastapi import Depends, status, HTTPException
+from fastapi import Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2AuthorizationCodeBearer
 
-from fastapp.core.config import settings
-from fastapp.api import schemas
 from fastapp.common.logger import logger
+from fastapp.core.config import settings
+from fastapp.db.session import SessionLocal
 
 """
 FastAPI 依赖
@@ -24,6 +26,18 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
+    """从token获得当前用户
+
+    Args:
+        token (str, optional): jwt. Defaults to Depends(oauth2_scheme).
+
+    Raises:
+        HTTPException: 403 token验证失败
+        HTTPException: 404
+
+    Returns:
+        [type]: [description] # TODO 返回用户模型（pydantic）
+    """
     try:
         claims = jwt.decode(
             token, settings.SECRET_KEY
@@ -39,3 +53,20 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+
+def get_db() -> Generator:
+    """获得数据库会话（SQLAlchemy Session）
+
+    创建数据库会话并在使用结束后关闭
+
+    `yield` 数据库会话 https://fastapi.tiangolo.com/zh/tutorial/dependencies/dependencies-with-yield/
+
+    Yields:
+        Generator:  
+    """
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
