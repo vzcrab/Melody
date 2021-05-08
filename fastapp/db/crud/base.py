@@ -6,7 +6,7 @@ from typing import Any, Generic, List, Optional, Type, TypeVar
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from fastapp.db.base import Base
+from fastapp.db.dbmodels.base import Base
 
 """
 CRUD 基本类

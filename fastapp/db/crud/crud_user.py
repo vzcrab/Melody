@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-
 from typing import Any, Dict, Optional, Union
 
 from sqlalchemy.orm import Session

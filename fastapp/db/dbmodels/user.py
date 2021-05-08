@@ -16,16 +16,21 @@ SQLAlchemy User Model
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "local_userinfo"
 
-    id = Column(Integer, primary_key=True)
-    username = Column(String(39))
-    email = Column(String(255))
-    id_github = Column(Integer, ForeignKey('oauth_github_user'))
-    github_user = relationship('oauth_github_user', backref='github_id')
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(40), nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    github_auth = Column(Boolean, default=False, nullable=False)
+
+    github_user = relationship('GithubUser', backref='user')
 
 
 class GithubUser(Base):
-    __tablename__ = "oauth_github_user"
+    __tablename__ = "github_userinfo"
 
     id = Column(Integer, primary_key=True)
+    username = Column(String(40), nullable=False)
+    nickname = Column(String(255))
+    profile_photo = Column(String(255))
+    email = Column(String(255), ForeignKey('local_userinfo.email'))

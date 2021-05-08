@@ -84,11 +84,11 @@
                     "objectType": "TableField_PGSQL",
                     "name": "username",
                     "type": "varchar",
-                    "length": 39,
+                    "length": 40,
                     "decimals": -2147483648,
                     "dimensions": 0,
                     "collation": "",
-                    "isNullable": true,
+                    "isNullable": false,
                     "defaultType": "None",
                     "defaultValue": "",
                     "comment": "用户名",
@@ -112,7 +112,7 @@
                   },
                   {
                     "objectType": "TableField_PGSQL",
-                    "name": "nike name",
+                    "name": "nickname",
                     "type": "varchar",
                     "length": 255,
                     "decimals": -2147483648,
@@ -122,7 +122,7 @@
                     "defaultType": "None",
                     "defaultValue": "",
                     "comment": "昵称",
-                    "oldName": "nike name",
+                    "oldName": "nickname",
                     "typeOID": 1,
                     "fieldObjectType": "",
                     "objectTypeSchema": "",
@@ -142,37 +142,7 @@
                   },
                   {
                     "objectType": "TableField_PGSQL",
-                    "name": "passwd",
-                    "type": "varchar",
-                    "length": 72,
-                    "decimals": -2147483648,
-                    "dimensions": 0,
-                    "collation": "",
-                    "isNullable": true,
-                    "defaultType": "None",
-                    "defaultValue": "",
-                    "comment": "密码长度应限制在[8,72]之间",
-                    "oldName": "passwd",
-                    "typeOID": 1,
-                    "fieldObjectType": "",
-                    "objectTypeSchema": "",
-                    "isDomainType": false,
-                    "collationSchema": "",
-                    "ordinalPosition": -1,
-                    "foreignOptions": [],
-                    "isIdentity": false,
-                    "identityGeneration": "None",
-                    "identityStart": 0,
-                    "identityIncrement": 0,
-                    "identityMinimum": 0,
-                    "hasNoIdentityMinValue": false,
-                    "identityMaximum": 0,
-                    "hasNoIdentityMaxValue": false,
-                    "isIdentityCycle": false
-                  },
-                  {
-                    "objectType": "TableField_PGSQL",
-                    "name": "profile photo",
+                    "name": "profile_photo",
                     "type": "varchar",
                     "length": 255,
                     "decimals": -2147483648,
@@ -182,7 +152,7 @@
                     "defaultType": "None",
                     "defaultValue": "",
                     "comment": "头像",
-                    "oldName": "profile photo",
+                    "oldName": "profile_photo",
                     "typeOID": 1,
                     "fieldObjectType": "",
                     "objectTypeSchema": "",
@@ -237,8 +207,7 @@
                   "objectType": "PrimaryKey_PGSQL",
                   "name": "",
                   "fields": [
-                    "id",
-                    "email"
+                    "id"
                   ],
                   "fillFactor": -1,
                   "indexTablespace": "",
@@ -247,8 +216,42 @@
                   "isDeferred": false,
                   "oldName": ""
                 },
-                "foreignKeys": [],
-                "uniques": [],
+                "foreignKeys": [
+                  {
+                    "objectType": "ForeignKey_PGSQL",
+                    "name": "",
+                    "fields": [
+                      "email"
+                    ],
+                    "referenceSchema": "masap",
+                    "referenceTable": "local_userinfo",
+                    "referenceFields": [
+                      "email"
+                    ],
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "comment": "",
+                    "isMatchFull": false,
+                    "isDeferrable": false,
+                    "isDeferred": false,
+                    "sourceCardinality": "NoneRelationship",
+                    "targetCardinality": "NoneRelationship",
+                    "oldName": ""
+                  }
+                ],
+                "uniques": [
+                  {
+                    "objectType": "Unique_PGSQL",
+                    "name": "",
+                    "fields": [],
+                    "fillFactor": -1,
+                    "indexTablespace": "",
+                    "comment": "",
+                    "isDeferrable": false,
+                    "isDeferred": false,
+                    "oldName": ""
+                  }
+                ],
                 "checks": [],
                 "excludes": [],
                 "triggers": [],
@@ -322,7 +325,7 @@
                     "isNullable": false,
                     "defaultType": "None",
                     "defaultValue": "",
-                    "comment": "",
+                    "comment": "外键（主表）",
                     "oldName": "email",
                     "typeOID": 1,
                     "fieldObjectType": "",
@@ -345,11 +348,11 @@
                     "objectType": "TableField_PGSQL",
                     "name": "username",
                     "type": "varchar",
-                    "length": 255,
+                    "length": 40,
                     "decimals": -2147483648,
                     "dimensions": 0,
                     "collation": "",
-                    "isNullable": true,
+                    "isNullable": false,
                     "defaultType": "None",
                     "defaultValue": "",
                     "comment": "这个字段即为github用户信息表中的username",
@@ -373,17 +376,17 @@
                   },
                   {
                     "objectType": "TableField_PGSQL",
-                    "name": "auth_bit",
+                    "name": "github_auth",
                     "type": "bool",
-                    "length": 255,
+                    "length": -2147483648,
                     "decimals": -2147483648,
                     "dimensions": 0,
                     "collation": "",
-                    "isNullable": true,
+                    "isNullable": false,
                     "defaultType": "None",
                     "defaultValue": "",
                     "comment": "授权标志位",
-                    "oldName": "auth_bit",
+                    "oldName": "github_auth",
                     "typeOID": 1,
                     "fieldObjectType": "",
                     "objectTypeSchema": "",
@@ -417,30 +420,22 @@
                   "isDeferred": false,
                   "oldName": ""
                 },
-                "foreignKeys": [
+                "foreignKeys": [],
+                "uniques": [
                   {
-                    "objectType": "ForeignKey_PGSQL",
+                    "objectType": "Unique_PGSQL",
                     "name": "",
                     "fields": [
                       "email"
                     ],
-                    "referenceSchema": "masap",
-                    "referenceTable": "github_userinfo",
-                    "referenceFields": [
-                      "email"
-                    ],
-                    "onDelete": "CASCADE",
-                    "onUpdate": "CASCADE",
+                    "fillFactor": -1,
+                    "indexTablespace": "",
                     "comment": "",
-                    "isMatchFull": false,
                     "isDeferrable": false,
                     "isDeferred": false,
-                    "sourceCardinality": "NoneRelationship",
-                    "targetCardinality": "NoneRelationship",
                     "oldName": ""
                   }
                 ],
-                "uniques": [],
                 "checks": [],
                 "excludes": [],
                 "triggers": [],
@@ -448,22 +443,7 @@
                 "partitions": []
               }
             ],
-            "views": [
-              {
-                "objectType": "View_PGSQL",
-                "name": "view_1",
-                "comment": "",
-                "query": "",
-                "viewOwner": "",
-                "checkOption": "",
-                "oldName": "",
-                "securityBarrier": false,
-                "oid": 0,
-                "ACL": "",
-                "schemaName": "",
-                "rules": []
-              }
-            ]
+            "views": []
           }
         ]
       }
@@ -487,8 +467,8 @@
           "type": "table",
           "schemaName": "masap",
           "tableName": "local_userinfo",
-          "x": 70,
-          "y": 40,
+          "x": 30,
+          "y": 30,
           "width": 200,
           "height": 200,
           "isBold": false,
@@ -503,8 +483,8 @@
           "type": "table",
           "schemaName": "masap",
           "tableName": "github_userinfo",
-          "x": 350,
-          "y": 40,
+          "x": 270,
+          "y": 30,
           "width": 200,
           "height": 200,
           "isBold": false,
@@ -520,39 +500,39 @@
       "relations": [
         {
           "name": "",
-          "sourceTableName": "local_userinfo",
+          "sourceTableName": "github_userinfo",
           "sourceSchemaName": "masap",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 285,
-              "y": 140
+              "x": 255,
+              "y": 130
             },
             {
-              "x": 310,
-              "y": 140
+              "x": 250,
+              "y": 130
             },
             {
-              "x": 310,
-              "y": 140
+              "x": 250,
+              "y": 130
             },
             {
-              "x": 335,
-              "y": 140
+              "x": 245,
+              "y": 130
             }
           ],
           "label": {
-            "x": 275,
-            "y": 102,
+            "x": 215,
+            "y": 92,
             "width": 50,
             "height": 30,
             "fontName": "Arial Unicode MS",
             "fontSize": 14,
             "fontColor": {
-              "r": 51,
-              "g": 51,
-              "b": 51,
+              "r": 204,
+              "g": 204,
+              "b": 204,
               "a": 1
             },
             "isFontBold": false,
