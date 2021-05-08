@@ -2,10 +2,13 @@
 # -*- encoding: utf-8 -*-
 
 from authlib.integrations.starlette_client import OAuth
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
+from sqlalchemy.orm import Session
 
-from fastapp.core.config import settings
 from fastapp.core import security
+from fastapp.core.config import settings
+from fastapp.api import deps, schemas
+from fastapp.db import crud
 
 """
 # 描述
@@ -38,13 +41,23 @@ async def login_via_github(request: Request):
     return await oauth.github.authorize_redirect(request, redirect_uri)
 
 
-@router.get("/auth/github")
-async def auth_via_github(request: Request):
+@router.get("/auth/github", response_model=schemas.Token)
+async def auth_via_github(request: Request, db: Session = Depends(deps.get_db)):
+    """获取github授权，验证是否已在本地注册
+    """
     # TODO httpx.ConnectTimeout 连接github超时
     token = await oauth.github.authorize_access_token(request)
     resp = await oauth.github.get('user', token=token)
-    user = resp.json()
+    github_user = resp.json()
+
+    email = await oauth.github.get('user/emails', token=token)
+
+    user = crud.user.get_by_email(db, email=email)
+    if not user:
+        user_in = schemas.user.UserCreate()
+        user = crud.user.create(db, obj_in=user_in)
+
     access_token = security.create_access_token(
-        user['login'])  # TODO 适配数据库。多用户, 数据库, 主键, 生成token
-    # email = await oauth.github.get('user/emails', token=token)
-    return access_token
+        user.id)  # TODO id
+
+    return {'type': 'bearer', 'access_token': access_token}

@@ -4,7 +4,7 @@
 from pydantic.main import BaseModel
 
 """
-TODO token 模型，暂未启用
+token 模型，暂未启用
 
 @File    :   token.py
 @Time    :   2021/04/22 11:06:16
@@ -14,4 +14,4 @@ TODO token 模型，暂未启用
 
 class Token(BaseModel):
     type: str = "bearer"
-    access_token: str
+    token: str

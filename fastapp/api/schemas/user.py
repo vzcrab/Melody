@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from os import access
 from typing import Optional
 
 from pydantic import BaseModel
+
+from fastapp.api.schemas.token import Token
 
 """
 用户模型
@@ -16,5 +19,13 @@ from pydantic import BaseModel
 
 class User(BaseModel):
     username: str
-    email: Optional[str] = None
-    disabled: Optional[bool] = None
+    email: Optional[str]
+    disabled: Optional[bool]
+    nickname: str
+    avatars: str
+    access_token: Token
+
+class UserCreate(BaseModel):
+    """CURD 专用
+    """
+    pass

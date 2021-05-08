@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from fastapp.db.crud.base import CRUDBase
 from fastapp.db.dbmodels.user import User
+from fastapp.api.schemas.user import UserCreate
 
 """
 CRUD-用户表
