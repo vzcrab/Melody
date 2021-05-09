@@ -2,10 +2,14 @@
 # -*- encoding: utf-8 -*-
 
 from authlib.integrations.starlette_client import OAuth
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
+from sqlalchemy.orm import Session
 
-from fastapp.core.config import settings
 from fastapp.core import security
+from fastapp.core.config import settings
+from fastapp.api import deps
+from fastapp.db import crud, dbmodels
+from fastapp import schemas
 
 """
 # 描述
@@ -38,13 +42,34 @@ async def login_via_github(request: Request):
     return await oauth.github.authorize_redirect(request, redirect_uri)
 
 
-@router.get("/auth/github")
-async def auth_via_github(request: Request):
+@router.get("/auth/github", response_model=schemas.Token)
+async def auth_via_github(request: Request, db: Session = Depends(deps.get_db)):
+    """获取github授权，验证是否已在本地注册
+    """
     # TODO httpx.ConnectTimeout 连接github超时
     token = await oauth.github.authorize_access_token(request)
     resp = await oauth.github.get('user', token=token)
-    user = resp.json()
+    github_user = resp.json()
+
+    email = await oauth.github.get('user/emails', token=token)
+    email = email.json()[0]['email']
+
+    user = crud.user.get_by_email(db, email=email)
+    if not user:
+        user_in = schemas.user.GithubUserCreate(
+            github_id=github_user['id'], username=github_user['login'], nickname=github_user['name'], profile_photo=github_user['avatar_url'], email=email)
+        user = crud.user.create_github(db, obj_in=user_in)
+
+    payload = schemas.token.TokenPayload(sub=user.id)
+
     access_token = security.create_access_token(
-        user['login'])  # TODO 适配数据库。多用户, 数据库, 主键, 生成token
-    # email = await oauth.github.get('user/emails', token=token)
-    return access_token
+        payload)
+
+    return {'type': 'bearer', 'token': access_token}
+
+
+@router.get('/user/info', response_model=schemas.UserInfo)
+def get_userinfo(user: dbmodels.User = Depends(deps.get_current_user)):
+    user_info = schemas.UserInfo(id=user.id, username=user.username, email=user.email,
+                                 nickname=user.github_user.nickname, avatars=user.github_user.profile_photo)
+    return user_info

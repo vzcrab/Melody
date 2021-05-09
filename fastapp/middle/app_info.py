@@ -6,7 +6,7 @@ import os
 
 from fastapi import HTTPException, status
 
-from fastapp.api.schemas.appinfo import ApkInfo, IpaInfo
+from fastapp.schemas.appinfo import ApkInfo, IpaInfo
 from fastapp.core.config import settings
 
 from apk_parse3.apk import APK

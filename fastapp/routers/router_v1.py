@@ -3,7 +3,7 @@
 
 from fastapi import APIRouter
 
-from fastapp.api.v1 import file, ws, auth
+from fastapp.api.v1 import file, auth, ws
 
 """
 版本路由区分与管理路由
