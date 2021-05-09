@@ -46,18 +46,18 @@ manager = ConnectionManager()
 
 def ws_get_user(ws: WebSocket):
     access_token = ws.headers['Sec-WebSocket-Protocol'].split(',')[-1].strip()
-    user = deps.get_current_user(access_token)
+    user = deps.get_user_id(access_token)
     return user
 
 
 @router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket, user: schemas.User = Depends(ws_get_user)):
+async def websocket_endpoint(websocket: WebSocket, id: int = Depends(ws_get_user)):
     await manager.connect(websocket)
 
     try:
         while True:
             data = await websocket.receive_text()
             # FIXME 格式化字符漏洞
-            await manager.send_personal_message(f"{user} 说了: {data}", websocket)
+            await manager.send_personal_message(f"{id} 说了: {data}", websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
