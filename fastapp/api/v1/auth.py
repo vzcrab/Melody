@@ -7,8 +7,9 @@ from sqlalchemy.orm import Session
 
 from fastapp.core import security
 from fastapp.core.config import settings
-from fastapp.api import deps, schemas
+from fastapp.api import deps
 from fastapp.db import crud, dbmodels
+from fastapp import schemas
 
 """
 # 描述

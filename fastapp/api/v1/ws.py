@@ -5,7 +5,8 @@ from typing import List
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Cookie
 
-from fastapp.api import schemas, deps
+from fastapp.api import deps
+from fastapp import schemas
 
 """
 # 描述

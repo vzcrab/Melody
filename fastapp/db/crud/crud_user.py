@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from fastapp.db.crud.base import CRUDBase
 from fastapp.db import dbmodels as models
-from fastapp.api import schemas
+from fastapp import schemas
 
 """
 CRUD-用户表

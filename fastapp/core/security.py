@@ -7,7 +7,7 @@ from typing import Any, Union
 from authlib.jose import jwt
 
 from fastapp.core.config import settings
-from fastapp.api.schemas.token import TokenPayload
+from fastapp.schemas.token import TokenPayload
 
 """
 # 描述

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from fastapp.common.logger import logger
 from fastapp.core.config import settings
 from fastapp.db.session import SessionLocal
-from fastapp.api import schemas
+from fastapp import schemas
 from fastapp.db import crud
 
 """

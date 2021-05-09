@@ -8,9 +8,10 @@ from typing import Union
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
-from fastapp.api import deps, schemas
+from fastapp.api import deps
 from fastapp.common.logger import logger
-from fastapp.models.app_info import AppInfo
+from fastapp.middle.app_info import AppInfo
+from fastapp import schemas
 
 """
 文件操作路由
