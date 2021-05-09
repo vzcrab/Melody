@@ -6,8 +6,6 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from fastapp.api.schemas.token import Token
-
 """
 用户模型
 
@@ -23,9 +21,13 @@ class User(BaseModel):
     disabled: Optional[bool]
     nickname: str
     avatars: str
-    access_token: Token
 
-class UserCreate(BaseModel):
+
+class GithubUserCreate(BaseModel):
     """CURD 专用
     """
-    pass
+    github_id: int
+    username: str
+    nickname: Optional[str]
+    profile_photo: Optional[str]
+    email: str

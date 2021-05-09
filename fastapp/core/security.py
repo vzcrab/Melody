@@ -21,11 +21,10 @@ from fastapp.api.schemas.token import TokenPayload
 def create_access_token(
     payload: TokenPayload
 ) -> str:
-    """创建访问JWT
+    """生成JWT
 
     Args:
-        subject (Union[str, Any]): JWT subject
-        expires_delta (timedelta, optional): 过期时间. Defaults to None.
+        payload (TokenPayload): 
 
     Returns:
         str: jwt
@@ -38,5 +37,5 @@ def create_access_token(
     header = {'alg': settings.ALGORITHM}
     payload.exp = expire
     encoded_jwt = jwt.encode(header,
-                             payload, settings.SECRET_KEY)  # 返回类型
+                             payload.dict(), settings.SECRET_KEY)
     return encoded_jwt

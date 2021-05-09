@@ -6,8 +6,8 @@ from typing import Any, Dict, Optional, Union
 from sqlalchemy.orm import Session
 
 from fastapp.db.crud.base import CRUDBase
-from fastapp.db.dbmodels.user import User
-from fastapp.api.schemas.user import UserCreate
+from fastapp.db import dbmodels as models
+from fastapp.api import schemas
 
 """
 CRUD-用户表
@@ -18,48 +18,22 @@ CRUD-用户表
 """
 
 
-class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
-    def get_by_email(self, db: Session, *, email: str) -> Optional[User]:
-        return db.query(User).filter(User.email == email).first()
+class CRUDUser():
+    def get_by_email(self, db: Session, *, email: str):
+        return db.query(models.User).filter(models.User.email == email).first()
 
-    def create(self, db: Session, *, obj_in: UserCreate) -> User:
-        db_obj = User(
-            email=obj_in.email,
-            hashed_password=get_password_hash(obj_in.password),
-            full_name=obj_in.full_name,
-            is_superuser=obj_in.is_superuser,
-        )
-        db.add(db_obj)
+    def create_github(self, db: Session, *, obj_in: schemas.user.GithubUserCreate):
+        db_obj_u = models.User(email=obj_in.email,
+                               username=obj_in.username, github_auth=True)
+
+        db_obj_g = models.GithubUser(id=obj_in.github_id, username=obj_in.username,
+                                     nickname=obj_in.nickname, profile_photo=obj_in.profile_photo, email=obj_in.email)
+        db.add(db_obj_u)
+        db.add(db_obj_g)
         db.commit()
-        db.refresh(db_obj)
-        return db_obj
+        db.refresh(db_obj_u)
 
-    def update(
-        self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
-    ) -> User:
-        if isinstance(obj_in, dict):
-            update_data = obj_in
-        else:
-            update_data = obj_in.dict(exclude_unset=True)
-        if update_data["password"]:
-            hashed_password = get_password_hash(update_data["password"])
-            del update_data["password"]
-            update_data["hashed_password"] = hashed_password
-        return super().update(db, db_obj=db_obj, obj_in=update_data)
-
-    def authenticate(self, db: Session, *, email: str, password: str) -> Optional[User]:
-        user = self.get_by_email(db, email=email)
-        if not user:
-            return None
-        if not verify_password(password, user.hashed_password):
-            return None
-        return user
-
-    def is_active(self, user: User) -> bool:
-        return user.is_active
-
-    def is_superuser(self, user: User) -> bool:
-        return user.is_superuser
+        return db_obj_u
 
 
-user = CRUDUser(User)
+user = CRUDUser()
