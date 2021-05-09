@@ -16,5 +16,5 @@ from fastapp.api.v1 import file, auth, ws
 api_v1_router = APIRouter()
 
 api_v1_router.include_router(file.router)
-api_v1_router.include_router(auth.router)
 api_v1_router.include_router(ws.router)
+api_v1_router.include_router(auth.router)
