@@ -7,6 +7,7 @@ from typing import Any, Union
 from authlib.jose import jwt
 
 from fastapp.core.config import settings
+from fastapp.api.schemas.token import TokenPayload
 
 """
 # 描述
@@ -18,7 +19,7 @@ from fastapp.core.config import settings
 
 
 def create_access_token(
-    subject: Union[str, Any], expires_delta: timedelta = None
+    payload: TokenPayload
 ) -> str:
     """创建访问JWT
 
@@ -29,15 +30,13 @@ def create_access_token(
     Returns:
         str: jwt
     """
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(
-            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+
+    expire = datetime.utcnow() + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
 
     header = {'alg': settings.ALGORITHM}
-    payload = {"exp": expire, "sub": str(subject)}
+    payload.exp = expire
     encoded_jwt = jwt.encode(header,
-                             payload, settings.SECRET_KEY)
+                             payload, settings.SECRET_KEY)  # 返回类型
     return encoded_jwt

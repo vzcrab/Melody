@@ -57,7 +57,9 @@ async def auth_via_github(request: Request, db: Session = Depends(deps.get_db)):
         user_in = schemas.user.UserCreate()
         user = crud.user.create(db, obj_in=user_in)
 
+    payload = schemas.token.TokenPayload(sub=user.id)
+
     access_token = security.create_access_token(
-        user.id)  # TODO id
+        payload)
 
     return {'type': 'bearer', 'access_token': access_token}
