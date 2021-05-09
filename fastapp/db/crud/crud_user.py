@@ -18,7 +18,7 @@ CRUD-用户表
 """
 
 
-class CRUDUser():
+class CRUDUser(CRUDBase[models.User]):
     def get_by_email(self, db: Session, *, email: str):
         return db.query(models.User).filter(models.User.email == email).first()
 
@@ -36,4 +36,4 @@ class CRUDUser():
         return db_obj_u
 
 
-user = CRUDUser()
+user = CRUDUser(models.User)

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from os import access
 from typing import Optional
 
 from pydantic import BaseModel
@@ -15,7 +14,10 @@ from pydantic import BaseModel
 """
 
 
-class User(BaseModel):
+class UserInfo(BaseModel):
+    """用户个人信息
+    """
+    id: int
     username: str
     email: Optional[str]
     disabled: Optional[bool]

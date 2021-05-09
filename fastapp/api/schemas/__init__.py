@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from .user import User
+from .user import UserInfo
 from .appinfo import ApkInfo, IpaInfo
 from .token import Token
 

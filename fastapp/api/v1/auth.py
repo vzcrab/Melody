@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from fastapp.core import security
 from fastapp.core.config import settings
 from fastapp.api import deps, schemas
-from fastapp.db import crud
+from fastapp.db import crud, dbmodels
 
 """
 # 描述
@@ -65,3 +65,10 @@ async def auth_via_github(request: Request, db: Session = Depends(deps.get_db)):
         payload)
 
     return {'type': 'bearer', 'token': access_token}
+
+
+@router.get('/user/info', response_model=schemas.UserInfo)
+def get_userinfo(user: dbmodels.User = Depends(deps.get_current_user())):
+    user_info = schemas.UserInfo(id=user.id, username=user.username, email=user.email,
+                                 nickname=user.github_user.nickname, avatars=user.github_user.profile_photo)
+    return user_info

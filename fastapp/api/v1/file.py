@@ -24,7 +24,7 @@ router = APIRouter()
 
 
 @router.post('/uploadfile', summary='上传文件', response_model=Union[schemas.ApkInfo, schemas.IpaInfo], responses={415: {}})
-async def create_upload_file(file: UploadFile = File(...), user: schemas.User = Depends(deps.get_current_user)):
+async def create_upload_file(file: UploadFile = File(...), id: int = Depends(deps.get_user_id)):
     # TODO 前端做hash, 将值上传, 判断
 
     file_ext = Path(file.filename).suffix
@@ -34,7 +34,7 @@ async def create_upload_file(file: UploadFile = File(...), user: schemas.User = 
 
     tmp_path = save_upload_file_tmp(file)  # 保存到临时目录
 
-    logger.info(f"用户 {user} -> 上传文件:{file.filename} 保存至 {tmp_path}")
+    logger.info(f"用户 {id} -> 上传文件:{file.filename} 保存至 {tmp_path}")
 
     app_info = parser_app(file_ext, tmp_path)
 
