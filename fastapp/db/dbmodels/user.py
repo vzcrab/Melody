@@ -23,8 +23,6 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False)
     github_auth = Column(Boolean, default=False, nullable=False)
 
-    github_user = relationship('GithubUser', backref='user')
-
 
 class GithubUser(Base):
     __tablename__ = "github_userinfo"
@@ -34,3 +32,5 @@ class GithubUser(Base):
     nickname = Column(String(255))
     profile_photo = Column(String(255))
     email = Column(String(255), ForeignKey('local_userinfo.email'))
+
+    user = relationship('User', backref='github_user')

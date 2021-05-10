@@ -71,5 +71,5 @@ async def auth_via_github(request: Request, db: Session = Depends(deps.get_db)):
 @router.get('/user/info', response_model=schemas.UserInfo)
 def get_userinfo(user: dbmodels.User = Depends(deps.get_current_user)):
     user_info = schemas.UserInfo(id=user.id, username=user.username, email=user.email,
-                                 nickname=user.github_user.nickname, avatars=user.github_user.profile_photo)
+                                 nickname=user.github_user[0].nickname, avatars=user.github_user[0].profile_photo)
     return user_info
