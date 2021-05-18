@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+import json
 from typing import List
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Cookie
+from fastapi import APIRouter, Cookie, Depends, WebSocket, WebSocketDisconnect
 
-from fastapp.api import deps
 from fastapp import schemas
+from fastapp.api import deps
 
 """
 # 描述
@@ -58,7 +59,8 @@ async def websocket_endpoint(websocket: WebSocket, id: int = Depends(ws_get_user
     try:
         while True:
             data = await websocket.receive_text()
-            # FIXME 格式化字符漏洞
-            await manager.send_personal_message(f"{id} 说了: {data}", websocket)
+            data = json.loads(data)
+            wsres = schemas.WSResponse(code=1001, status='success').json()
+            await manager.send_personal_message(wsres, websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)

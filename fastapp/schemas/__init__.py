@@ -4,6 +4,7 @@
 from .user import UserInfo
 from .appinfo import ApkInfo, IpaInfo
 from .token import Token
+from .wsinfo import WSResponse
 
 """
 Pydantic 模型

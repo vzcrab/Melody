@@ -60,7 +60,7 @@ async def auth_via_github(request: Request, db: Session = Depends(deps.get_db)):
             github_id=github_user['id'], username=github_user['login'], nickname=github_user['name'], profile_photo=github_user['avatar_url'], email=email)
         user = crud.user.create_github(db, obj_in=user_in)
 
-    payload = schemas.token.TokenPayload(sub=user.id)
+    payload = schemas.token.TokenPayload(sub=user.uid)
 
     access_token = security.create_access_token(
         payload)
