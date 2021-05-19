@@ -1,5 +1,6 @@
 from DMA import decompile as dma
 from rule.url import get_url
+from rule.static_vuln import vuln_match_all
 
 
 class MATCH:
@@ -27,11 +28,14 @@ class MATCH:
     def match_url(self):
         return get_url(self.source_path)
 
+    def match_vuln_all(self):
+        return vuln_match_all(self.source_path)
+
 
 if __name__ == '__main__':
     out_path = r"/Users/ios/Downloads/out"
     file_path = r"/Users/ios/Downloads/wifi.apk"
     match = MATCH(file_path, out_path)
-    match_result = match.match_url()
-
+    #match_result = match.match_url()
+    match_result = match.match_vuln_all()
     print(match_result)
