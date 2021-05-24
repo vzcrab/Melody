@@ -155,3 +155,4 @@ plugins/app_parser/app_parser
 plugins/ipa_parser/_tmp/*
 
 .vscode/settings.json
+alembic.ini
