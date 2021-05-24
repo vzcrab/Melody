@@ -31,7 +31,6 @@ class InMemorySession(object):
         result = self.data.get(session_id)
         if not result:
             return None
-        print(result)
         return result.copy()
 
     async def write(self, session_data: schemas.SessionData) -> bool:

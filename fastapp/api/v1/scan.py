@@ -20,8 +20,8 @@ router = APIRouter()
 
 
 @router.get('/url', summary='扫描APK中URL')
-def scan_url(id: str = Depends(deps.get_user_id)):
-    user_sd = session.read(id)
-    vd = VulnDetection(user_sd.app_path)
+async def scan_url(id: str = Depends(deps.get_user_id)):
+    user_sd = await session.read(id)
+    vd = VulnDetection(str(user_sd['app_path']))
     url_res = vd.scan_url()
     return url_res

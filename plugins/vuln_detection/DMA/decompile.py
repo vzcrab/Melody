@@ -1,8 +1,7 @@
-from subprocess import call
-from pathlib import Path
-import platform
 import os
-import json
+import platform
+from pathlib import Path
+from subprocess import call
 
 
 def listdir(path, list_name):
@@ -17,12 +16,13 @@ def listdir(path, list_name):
 def decompile(path, out_path):
     system = platform.system()
     file_output = open("result", "w")
+    # FIXME 路径问题修复
     if system == "Windows":
-        call(".\DMA\lib\jadx.bat --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path,
+        call(".\lib\jadx.bat --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path,
              shell=True,
              stdout=file_output)
     else:
-        call("./DMA/lib/jadx --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path,
+        call("./lib/jadx --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path,
              shell=True,
              stdout=file_output)
     file_output.close()

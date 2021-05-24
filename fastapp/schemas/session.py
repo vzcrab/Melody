@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from pathlib import Path
+from typing import Union
+
 from pydantic import BaseModel
 
 """
@@ -14,4 +17,4 @@ Session 会话（服务端）数据模型
 
 class SessionData(BaseModel):
     session_id: str
-    app_path: str
+    app_path: Union[str, Path]
