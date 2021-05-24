@@ -112,6 +112,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+prod.env
 
 # Spyder project settings
 .spyderproject
@@ -154,3 +155,4 @@ plugins/app_parser/app_parser
 plugins/ipa_parser/_tmp/*
 
 .vscode/settings.json
+alembic.ini

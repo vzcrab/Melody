@@ -33,6 +33,6 @@ if success to decompile, then return reverse's file tree,else return Error dict.
      - xxxx.java 依赖源码文件
     
 错误示例:
-``` json
+``` python
 ['ERROR - Incorrect arguments: File not found /Users/ios/Downloads/ReflectMaster-3.5.3.apk1', '']
 ```

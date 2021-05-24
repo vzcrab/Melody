@@ -2,14 +2,16 @@
 # -*- encoding: utf-8 -*-
 
 import shutil
-import os
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+from typing import Union
 
-from fastapi import APIRouter, File, UploadFile, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
+from fastapp.api import deps
 from fastapp.common.logger import logger
-from fastapp.core.config import settings
-from fastapp.api import schemas
-from fastapp.models.app_info import AppInfo
+from fastapp.middle.app_info import AppInfo
+from fastapp import schemas
 
 """
 文件操作路由
@@ -22,27 +24,44 @@ from fastapp.models.app_info import AppInfo
 router = APIRouter()
 
 
-@router.post('/uploadfile', summary='上传文件', response_model=schemas.AppInfoModel, responses={415: {}})
-async def create_upload_file(file: UploadFile = File(...)):
+@router.post('/uploadfile', summary='上传文件', response_model=Union[schemas.ApkInfo, schemas.IpaInfo], responses={415: {}})
+async def create_upload_file(file: UploadFile = File(...), id: int = Depends(deps.get_user_id)):
     # TODO 前端做hash, 将值上传, 判断
-    # TODO 权限, 用户上传
 
-    logger.info(f"用户->上传文件:{file.filename}")
-
-    file_ext = os.path.splitext(file.filename)[-1]
+    file_ext = Path(file.filename).suffix
     if file_ext not in ['.apk', '.ipa']:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail='不支持该媒体类型')
 
-    uploadfile_path = os.path.join(settings.BASE_PATH, 'data', 'uploadfile')
-    if not os.path.exists(uploadfile_path):
-        os.makedirs(uploadfile_path)
+    tmp_path = save_upload_file_tmp(file)  # 保存到临时目录
 
-    file_path = os.path.join(uploadfile_path, file.filename)
+    logger.info(f"用户 {id} -> 上传文件:{file.filename} 保存至 {tmp_path}")
 
-    with open(file_path, 'wb') as f:
-        c_path = shutil.copyfileobj(file.file, f)
+    app_info = parser_app(file_ext, tmp_path)
 
-    app_info = AppInfo(file_path).apk_parser()
+    Path.unlink(tmp_path)
 
     return app_info
+
+
+def parser_app(file_ext: str, file_path: str):
+    appf = AppInfo(file_path)
+
+    # TODO 错误捕获, 解析失败, 返回错误
+    if file_ext == '.apk':
+        app_info = appf.apk_parser()
+    elif file_ext == '.ipa':
+        app_info = appf.ipa_parser()
+
+    return app_info
+
+
+def save_upload_file_tmp(upload_file: UploadFile) -> Path:
+    try:
+        suffix = Path(upload_file.filename).suffix
+        with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            shutil.copyfileobj(upload_file.file, tmp)
+            tmp_path = Path(tmp.name)
+    finally:
+        upload_file.file.close()
+    return tmp_path
