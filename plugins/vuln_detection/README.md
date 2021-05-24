@@ -18,6 +18,8 @@
     待补充
 ## Usage
  ```python
+    from plugins.vuln_detection.matching import MATCH
+    
     out_path = r"/Users/ios/Downloads/out"
     file_path = r"/Users/ios/Downloads/wifi.apk"
     match = MATCH(file_path, out_path)

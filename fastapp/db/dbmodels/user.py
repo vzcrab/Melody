@@ -18,7 +18,7 @@ SQLAlchemy User Model
 class User(Base):
     __tablename__ = "local_userinfo"
 
-    uid = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(40), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     github_auth = Column(Boolean, default=False, nullable=False)

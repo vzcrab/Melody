@@ -12,6 +12,7 @@ from fastapp.api import deps
 from fastapp.common.logger import logger
 from fastapp.middle.app_info import AppInfo
 from fastapp import schemas
+from fastapp.api.session import session
 
 """
 文件操作路由
@@ -33,18 +34,18 @@ async def create_upload_file(file: UploadFile = File(...), id: int = Depends(dep
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail='不支持该媒体类型')
 
-    tmp_path = save_upload_file_tmp(file)  # 保存到临时目录
+    tmp_path = __save_upload_file_tmp(file)  # 保存到临时目录
 
     logger.info(f"用户 {id} -> 上传文件:{file.filename} 保存至 {tmp_path}")
 
-    app_info = parser_app(file_ext, tmp_path)
+    app_info = __parser_app(file_ext, tmp_path)
 
     Path.unlink(tmp_path)
 
     return app_info
 
 
-def parser_app(file_ext: str, file_path: str):
+def __parser_app(file_ext: str, file_path: str):
     appf = AppInfo(file_path)
 
     # TODO 错误捕获, 解析失败, 返回错误
@@ -56,11 +57,11 @@ def parser_app(file_ext: str, file_path: str):
     return app_info
 
 
-def save_upload_file_tmp(upload_file: UploadFile) -> Path:
+def __save_upload_file_tmp(upload_file: UploadFile) -> Path:
     try:
         suffix = Path(upload_file.filename).suffix
         with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-            shutil.copyfileobj(upload_file.file, tmp)
+            shutil.copyfileobj(upload_file.file, tmp)  # TODO 保存到MASAP临时目录
             tmp_path = Path(tmp.name)
     finally:
         upload_file.file.close()

@@ -52,7 +52,7 @@ def __jwt_decode(token: str):
         )
         claims.validate()
         token_data = schemas.token.TokenPayload(**claims)
-    except (errors.InvalidClaimError, errors.DecodeError, errors.BadSignatureError) as e:
+    except (errors.InvalidClaimError, errors.DecodeError, errors.BadSignatureError, errors.ExpiredTokenError) as e:
         logger.error(repr(e))
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
