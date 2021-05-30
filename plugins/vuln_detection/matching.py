@@ -1,19 +1,20 @@
-from .DMA import decompile as dma
-from .rule.url import get_url
-from .rule.static_vuln import vuln_match_all
+from DMA import decompile as dma
+from rule.url import get_url
+from rule.static_vuln import vuln_match_all
 
 
 class MATCH:
-    def __init__(self, path, out_path):
+    def __init__(self, base_path, path, out_path):
+        self.base_path = base_path
         self.path = path
         self.out_path = out_path
         self.source_path = []
-        self.status_list = []
+        self._status = ""
         self.match_rule = ""
         self.decompile()
 
     def decompile(self):
-        result = dma.decompile(self.path, self.out_path)
+        result = dma.decompile(self.base_path, self.path, self.out_path)
         if "ERROR" not in result[0]:
             self.source_path = result
         else:
@@ -22,8 +23,8 @@ class MATCH:
     def status(self):
         with open("result", "r", encoding="utf-8") as f:
             result = f.read()
-            self.status_list = result.split("\n")
-        return self.status_list
+            self._status = result
+        return self._status
 
     def match_url(self):
         return get_url(self.source_path)
@@ -35,7 +36,10 @@ class MATCH:
 if __name__ == '__main__':
     out_path = r"/Users/ios/Downloads/out"
     file_path = r"/Users/ios/Downloads/wifi.apk"
-    match = MATCH(file_path, out_path)
-    #match_result = match.match_url()
-    match_result = match.match_vuln_all()
-    print(match_result)
+    base_path = r"/Users/ios/Desktop/DLU/Melody"
+    match = MATCH(base_path, file_path, out_path)
+
+    # match_result = match.match_url()
+    # match_result = match.match_vuln_all()
+    # print(match_result)
+    print(match.status())
