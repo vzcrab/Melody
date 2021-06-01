@@ -34,6 +34,8 @@ class VulnDetection(object):
         Returns:
             [type]: [description]
         """
-        result = MATCH(settings.BASE_PATH, self.file, self.output).match_url()
+        vmatch = MATCH(settings.BASE_PATH, self.file, self.output)
+        result = vmatch.match_url()
+        # print(vmatch.source_path)
 
         return result

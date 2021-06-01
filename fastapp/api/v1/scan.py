@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, status
 
 from fastapp.api import deps
-from fastapp.middle.vuln_detection import VulnDetection
 from fastapp.api.session import session
-
+from fastapp.middle.vuln_detection import VulnDetection
 
 """
 漏洞扫描API

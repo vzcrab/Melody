@@ -36,7 +36,7 @@ class CRUDUser(CRUDBase[models.User]):
         return db_obj_u
 
     def get(self, db: Session, uid: Any):
-        return db.query(models.User).filter(models.User.id == uid).first()
+        return db.query(models.User).filter(models.User.uid == uid).first()
 
 
 user = CRUDUser(models.User)
