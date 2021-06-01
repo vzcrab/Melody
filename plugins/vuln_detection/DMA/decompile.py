@@ -34,7 +34,7 @@ def decompile(base_path, path, out_path):
             listdir(out_path, path_list)
             return path_list
         else:
-            err = res.split("\n")
+            err = res
             return err
 
 

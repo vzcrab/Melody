@@ -15,10 +15,10 @@ class MATCH:
 
     def decompile(self):
         result = dma.decompile(self.base_path, self.path, self.out_path)
-        if "ERROR" not in result[0]:
+        if type(result) == list:
             self.source_path = result
         else:
-            print("decompile error: ", result[0])
+            print("decompile error: ", result)
 
     def status(self):
         system = platform.system()
@@ -39,12 +39,12 @@ class MATCH:
 
 
 if __name__ == '__main__':
-    out_path = r"/Users/ios/Downloads/out"
+    out_path = r"/Users/ios/Downloads/out/"
     file_path = r"/Users/ios/Downloads/wifi.apk"
     base_path = r"/Users/ios/Desktop/DLU/Melody"
-    match = MATCH(base_path, file_path, out_path)
+    match = MATCH(base_path, file_path, out_path).match_url()
 
     # match_result = match.match_url()
     # match_result = match.match_vuln_all()
     # print(match_result)
-    print(match.status())
+    print(match)
