@@ -18,7 +18,8 @@ SQLAlchemy User Model
 class User(Base):
     __tablename__ = "local_userinfo"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    uid = Column(Integer, primary_key=True,
+                 autoincrement=True, nullable=False)
     username = Column(String(40), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     github_auth = Column(Boolean, default=False, nullable=False)
@@ -31,6 +32,7 @@ class GithubUser(Base):
     username = Column(String(40), nullable=False)
     nickname = Column(String(255))
     profile_photo = Column(String(255))
-    email = Column(String(255), ForeignKey('local_userinfo.email'))
+    email = Column(String(255), ForeignKey(
+        'local_userinfo.email'), unique=True, nullable=False)
 
     user = relationship('User', backref='github_user')
