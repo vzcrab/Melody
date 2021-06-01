@@ -1,6 +1,6 @@
-from DMA import decompile as dma
-from rule.url import get_url
-from rule.static_vuln import vuln_match_all
+from .DMA import decompile as dma
+from .rule.url import get_url
+from .rule.static_vuln import vuln_match_all
 
 
 class MATCH:
