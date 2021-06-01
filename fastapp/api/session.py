@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from fastapi import WebSocket
 from fastapp.schemas import session
 from typing import Any, Dict, Optional
 
@@ -31,12 +32,12 @@ class InMemorySession(object):
         result = self.data.get(session_id)
         if not result:
             return None
-        return result.copy()
+
+        return schemas.SessionData(**result)
 
     async def write(self, session_data: schemas.SessionData) -> bool:
         session_id = session_data.session_id
         session_dict = session_data.dict()
-        del session_dict['session_id']
         self.data[session_id] = session_dict
         return True
 
@@ -45,6 +46,16 @@ class InMemorySession(object):
 
     async def exists(self, session_id: str) -> bool:
         return session_id in self.data
+
+    async def write_ws(self, session_id, ws: WebSocket) -> WebSocket:
+        session_data = await self.read(session_id)
+        session_data.ws = ws
+        await self.write(session_data)
+        return ws
+
+    async def get_ws(self, session_id: str) -> WebSocket:
+        session_data = schemas.SessionData(self.read(session_id))
+        return session_data.ws
 
 
 session = InMemorySession()  # TODO 最佳实现

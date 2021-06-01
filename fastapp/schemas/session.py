@@ -2,9 +2,10 @@
 # -*- encoding: utf-8 -*-
 
 from pathlib import Path
-from typing import Union
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel
+from fastapi import WebSocket
 
 """
 Session 会话（服务端）数据模型
@@ -18,3 +19,4 @@ Session 会话（服务端）数据模型
 class SessionData(BaseModel):
     session_id: str
     app_path: Union[str, Path]
+    ws: Optional[Any]  # WebSocket

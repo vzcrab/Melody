@@ -8,6 +8,7 @@ from fastapi import APIRouter, Cookie, Depends, WebSocket, WebSocketDisconnect
 
 from fastapp import schemas
 from fastapp.api import deps
+from fastapp.api.session import session
 
 """
 # 描述
@@ -38,9 +39,10 @@ class ConnectionManager(object):
         # 关闭时 移除ws对象
         self.active_connections.remove(ws)
 
-    async def send_personal_message(self, message: str, ws: WebSocket):
+    async def send_personal_message(self, message: schemas.WSResponse, ws: WebSocket):
+
         # 发送个人消息
-        await ws.send_text(message)
+        await ws.send_text(message.json())
 
 
 manager = ConnectionManager()
@@ -56,11 +58,14 @@ def ws_get_user(ws: WebSocket):
 async def websocket_endpoint(websocket: WebSocket, id: int = Depends(ws_get_user)):
     await manager.connect(websocket)
 
+    # 当前session中存储
+    await session.write_ws(id, websocket)
+
     try:
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)
-            wsres = schemas.WSResponse(code=1001, status='success').json()
+            wsres = schemas.WSResponse(code=1001, status='success')
             await manager.send_personal_message(wsres, websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)

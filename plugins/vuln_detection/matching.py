@@ -1,6 +1,6 @@
 from .DMA import decompile as dma
-from .rule.url import get_url
 from .rule.static_vuln import vuln_match_all
+from .rule.url import get_url
 
 
 class MATCH:
@@ -11,14 +11,15 @@ class MATCH:
         self.source_path = []
         self._status = ""
         self.match_rule = ""
-        self.decompile()
 
-    def decompile(self):
+    def decompile(self) -> bool:
         result = dma.decompile(self.base_path, self.path, self.out_path)
-        if type(result) == list:
+        if type(result) == list and result:
             self.source_path = result
+            return True
         else:
             print("decompile error: ", result)
+            return False
 
     def status(self):
         system = platform.system()
