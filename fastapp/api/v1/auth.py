@@ -2,14 +2,14 @@
 # -*- encoding: utf-8 -*-
 
 from authlib.integrations.starlette_client import OAuth
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
+from fastapp import schemas
+from fastapp.api import deps
 from fastapp.core import security
 from fastapp.core.config import settings
-from fastapp.api import deps
 from fastapp.db import crud, dbmodels
-from fastapp import schemas
 
 """
 # 描述

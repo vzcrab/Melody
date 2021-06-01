@@ -9,7 +9,7 @@ from fastapi import HTTPException, status
 from fastapp.schemas.appinfo import ApkInfo, IpaInfo
 from fastapp.core.config import settings
 
-from apk_parse3.apk import APK
+from plugins.apk_parse3.apk_parse3.apk import APK
 from plugins.ipa_parser import IosIpa as IpaParser
 
 """
