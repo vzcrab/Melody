@@ -1,8 +1,6 @@
 from subprocess import call
-from pathlib import Path
 import platform
 import os
-import json
 
 
 def listdir(path, list_name):
@@ -16,18 +14,20 @@ def listdir(path, list_name):
 
 def decompile(base_path, path, out_path):
     system = platform.system()
-    file_output = open("result", "w")
     if system == "Windows":
-        call(base_path+"\\plugins\\vuln_detection\\DMA\\lib\\jadx.bat --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path,
-             shell=True,
-             stdout=file_output)
+        outs_path = out_path + "\\result"
+        call_path = base_path+"\\plugins\\vuln_detection\\DMA\\lib\\jadx.bat --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path
     else:
-        call(base_path+"/plugins/vuln_detection/DMA/lib/jadx --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path,
-             shell=True,
-             stdout=file_output)
+        outs_path = out_path + "/result"
+        call_path = base_path+"/plugins/vuln_detection/DMA/lib/jadx --log-level error --deobf --deobf-parse-kotlin-metadata -d " + out_path + " " + path
+
+    file_output = open(outs_path, "w")
+    call(call_path,
+         shell=True,
+         stdout=file_output)
     file_output.close()
     # check decompile status
-    with open("result", "r", encoding="utf-8") as f:
+    with open(outs_path, "r", encoding="utf-8") as f:
         res = f.read()
         if "done" in res:
             path_list = []

@@ -21,7 +21,12 @@ class MATCH:
             print("decompile error: ", result[0])
 
     def status(self):
-        with open("result", "r", encoding="utf-8") as f:
+        system = platform.system()
+        if system == "Windows":
+            outs_path = self.out_path + "\\result"
+        else:
+            outs_path = self.out_path + "/result"
+        with open(outs_path, "r", encoding="utf-8") as f:
             result = f.read()
             self._status = result
         return self._status
