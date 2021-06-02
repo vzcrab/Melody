@@ -18,10 +18,15 @@
     待补充
 ## Usage
  ```python
+    from plugins.vuln_detection.matching import MATCH
+    
     out_path = r"/Users/ios/Downloads/out"
     file_path = r"/Users/ios/Downloads/wifi.apk"
-    match = MATCH(file_path, out_path)
-    match_result = match.match_url()
+    base_path = r"/Users/ios/Desktop/DLU/Melody"
+    match = MATCH(base_path, file_path, out_path)
 
-    print(match_result)
+    #match_result = match.match_url()
+    #match_result = match.match_vuln_all()
+    #print(match_result)
+    print(match.status())
 ```

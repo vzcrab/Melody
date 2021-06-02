@@ -2,11 +2,12 @@
 # -*- encoding: utf-8 -*-
 
 from authlib.integrations.starlette_client import OAuth
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from fastapp import schemas
 from fastapp.api import deps
+from fastapp.common.logger import logger
 from fastapp.core import security
 from fastapp.core.config import settings
 from fastapp.db import crud, dbmodels
@@ -47,7 +48,13 @@ async def auth_via_github(request: Request, db: Session = Depends(deps.get_db)):
     """获取github授权，验证是否已在本地注册
     """
     # TODO httpx.ConnectTimeout 连接github超时
-    token = await oauth.github.authorize_access_token(request)
+    try:
+        token = await oauth.github.authorize_access_token(request)
+    except Exception as e:
+        logger.error(repr(e))
+        # 重复请求，导致github code与state过期出现错误
+        raise HTTPException(
+            status_code=status.HTTP_425_TOO_EARLY, detail="重复请求!")
     resp = await oauth.github.get('user', token=token)
     github_user = resp.json()
 

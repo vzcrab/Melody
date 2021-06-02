@@ -5,6 +5,7 @@ from .user import UserInfo
 from .appinfo import ApkInfo, IpaInfo
 from .token import Token
 from .wsinfo import WSResponse
+from .session import SessionData
 
 """
 Pydantic 模型

@@ -1,29 +1,36 @@
-from DMA import decompile as dma
-from rule.url import get_url
-from rule.static_vuln import vuln_match_all
+from .DMA import decompile as dma
+from .rule.static_vuln import vuln_match_all
+from .rule.url import get_url
 
 
 class MATCH:
-    def __init__(self, path, out_path):
+    def __init__(self, base_path, path, out_path):
+        self.base_path = base_path
         self.path = path
         self.out_path = out_path
         self.source_path = []
-        self.status_list = []
+        self._status = ""
         self.match_rule = ""
-        self.decompile()
 
-    def decompile(self):
-        result = dma.decompile(self.path, self.out_path)
-        if "ERROR" not in result[0]:
+    def decompile(self) -> bool:
+        result = dma.decompile(self.base_path, self.path, self.out_path)
+        if type(result) == list and result:
             self.source_path = result
+            return True
         else:
-            print("decompile error: ", result[0])
+            print("decompile error: ", result)
+            return False
 
     def status(self):
-        with open("result", "r", encoding="utf-8") as f:
+        system = platform.system()
+        if system == "Windows":
+            outs_path = self.out_path + "\\result"
+        else:
+            outs_path = self.out_path + "/result"
+        with open(outs_path, "r", encoding="utf-8") as f:
             result = f.read()
-            self.status_list = result.split("\n")
-        return self.status_list
+            self._status = result
+        return self._status
 
     def match_url(self):
         return get_url(self.source_path)
@@ -33,9 +40,12 @@ class MATCH:
 
 
 if __name__ == '__main__':
-    out_path = r"/Users/ios/Downloads/out"
+    out_path = r"/Users/ios/Downloads/out/"
     file_path = r"/Users/ios/Downloads/wifi.apk"
-    match = MATCH(file_path, out_path)
-    #match_result = match.match_url()
-    match_result = match.match_vuln_all()
-    print(match_result)
+    base_path = r"/Users/ios/Desktop/DLU/Melody"
+    match = MATCH(base_path, file_path, out_path).match_url()
+
+    # match_result = match.match_url()
+    # match_result = match.match_vuln_all()
+    # print(match_result)
+    print(match)
